@@ -80,8 +80,15 @@ function SortableQuestionRow({ question, number, active, onSelect, onDelete }: S
 
 function Switch({ checked, onChange, label }: { checked: boolean; onChange: (checked: boolean) => void; label: string }) {
   return (
-    <button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} className={`relative h-5 w-9 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#007a87]/35 ${checked ? 'bg-[#007a87]' : 'bg-[#d5d2d5] dark:bg-[#575357]'}`}>
-      <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${checked ? 'translate-x-[18px]' : 'translate-x-0.5'}`} />
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      onClick={() => onChange(!checked)}
+      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#007a87]/35 ${checked ? 'bg-[#007a87]' : 'bg-[#d5d2d5] dark:bg-[#575357]'}`}
+    >
+      <span className={`inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${checked ? 'translate-x-4' : 'translate-x-0.5'}`} />
     </button>
   );
 }
@@ -237,11 +244,17 @@ export default function BuilderWorkspace({
       </header>
 
       <div className="relative flex min-h-0 flex-1">
+        {pageRailOpen && <button type="button" aria-label="Close pages panel" onClick={() => setPageRailOpen(false)} className="absolute inset-0 z-20 bg-black/20 md:hidden" />}
         {pageRailOpen && (
           <aside className={`absolute inset-y-0 left-0 z-30 flex w-[272px] shrink-0 flex-col border-r bg-white shadow-xl md:relative md:z-auto md:shadow-none dark:bg-[#232124] ${separatorClass}`} aria-label="Question pages and endings">
             <section className="flex min-h-0 flex-col px-3 pt-4" style={{ height: `${pagesHeight}%` }}>
               <div className="mb-3 flex items-center justify-between px-2">
-                <h2 className="text-[13px] font-semibold text-[#39353b] dark:text-[#eeeaee]">Pages</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-[13px] font-semibold text-[#39353b] dark:text-[#eeeaee]">Pages</h2>
+                  <button type="button" onClick={() => setPageRailOpen(false)} aria-label="Hide pages panel" title="Hide pages panel" className="flex h-7 w-7 items-center justify-center rounded-lg text-[#777179] hover:bg-[#f4f2f4] lg:hidden dark:text-[#bcb6bc] dark:hover:bg-white/[0.07]">
+                    <PanelLeftClose size={15} />
+                  </button>
+                </div>
                 <span className="text-[10px] text-[#969098]">1 page</span>
               </div>
               <div className="mb-2 flex items-center gap-2 rounded-lg bg-[#f5f3f5] px-2.5 py-2 dark:bg-[#302d31]">
@@ -333,7 +346,7 @@ export default function BuilderWorkspace({
                               onChange={event => onUpdateQuestion({ title: event.target.value })}
                               rows={Math.min(4, Math.max(1, Math.ceil(activeQuestion.title.length / 48)))}
                               placeholder="Your question here. Recall information with @"
-                              className="w-full resize-none bg-transparent text-[25px] font-semibold leading-[1.25] tracking-[-0.025em] outline-none placeholder:opacity-35 sm:text-[32px]"
+                              className="w-full resize-none overflow-hidden bg-transparent text-[25px] font-semibold leading-[1.25] tracking-[-0.025em] outline-none placeholder:opacity-35 sm:text-[32px]"
                               style={{ color: canvasText }}
                             />
                             <textarea
@@ -342,7 +355,7 @@ export default function BuilderWorkspace({
                               onChange={event => onUpdateQuestion({ description: event.target.value })}
                               rows={Math.max(1, Math.ceil((activeQuestion.description || '').length / 70))}
                               placeholder="Description (optional)"
-                              className="mt-2 w-full resize-none bg-transparent text-[15px] leading-6 outline-none placeholder:opacity-45 sm:text-[16px]"
+                              className="mt-2 w-full resize-none overflow-hidden bg-transparent text-[15px] leading-6 outline-none placeholder:opacity-45 sm:text-[16px]"
                               style={{ color: canvasMuted }}
                             />
                           </div>
@@ -357,7 +370,7 @@ export default function BuilderWorkspace({
                           {activeQuestion.type === 'long_text' && <div className="max-w-[520px] border-b pb-10 text-[17px]" style={{ borderColor: `${theme.primary_color}90`, color: canvasMuted }}>Type your answer here…</div>}
                           {activeQuestion.type === 'multiple_choice' && (
                             <div className="max-w-[540px] space-y-2.5">
-                              {(activeQuestion.settings?.choices || []).map((choice, index) => <div key={`${choice}-${index}`} className="flex items-center gap-3 rounded-xl border px-3 py-2.5 text-[14px]" style={{ borderColor: theme.dark_mode ? '#504b52' : '#e3e0e4', color: canvasText }}><span className="flex h-6 w-6 items-center justify-center rounded-md border text-[11px] font-semibold" style={{ borderColor: theme.dark_mode ? '#625c65' : '#d5d1d7', color: canvasMuted }}>{String.fromCharCode(65 + index)}</span>{choice || 'Option'}</div>)}
+                              {(activeQuestion.settings?.choices || []).map((choice, index) => <div key={`choice-${index}`} className="flex items-center gap-3 rounded-xl border px-3 py-2.5 text-[14px]" style={{ borderColor: theme.dark_mode ? '#504b52' : '#e3e0e4', color: canvasText }}><span className="flex h-6 w-6 items-center justify-center rounded-md border text-[11px] font-semibold" style={{ borderColor: theme.dark_mode ? '#625c65' : '#d5d1d7', color: canvasMuted }}>{String.fromCharCode(65 + index)}</span>{choice || 'Option'}</div>)}
                             </div>
                           )}
                           {activeQuestion.type === 'dropdown' && <div className="flex max-w-[480px] items-center justify-between rounded-xl border px-4 py-3 text-[14px]" style={{ borderColor: theme.dark_mode ? '#504b52' : '#e3e0e4', color: canvasMuted }}>{activeQuestion.settings?.choices?.[0] || 'Select an option'}<ChevronDown size={16} /></div>}
@@ -399,7 +412,7 @@ export default function BuilderWorkspace({
               </div>
             </main>
 
-            <aside className={`${mobileInspectorOpen ? 'fixed inset-y-[104px] right-0 z-40 flex w-[min(88vw,320px)] shadow-2xl' : 'hidden'} shrink-0 flex-col border-l bg-white lg:relative lg:inset-auto lg:z-auto lg:flex lg:w-[300px] lg:shadow-none dark:bg-[#232124] ${separatorClass}`} aria-label={sidePanel === 'question' ? 'Question settings' : sidePanel === 'design' ? 'Form design settings' : 'Ending settings'}>
+            <aside className={`${mobileInspectorOpen ? 'fixed inset-y-[104px] right-0 z-[60] flex w-[min(88vw,320px)] shadow-2xl' : 'hidden'} shrink-0 flex-col border-l bg-white lg:relative lg:inset-auto lg:z-auto lg:flex lg:w-[300px] lg:shadow-none dark:bg-[#232124] ${separatorClass}`} aria-label={sidePanel === 'question' ? 'Question settings' : sidePanel === 'design' ? 'Form design settings' : 'Ending settings'}>
               <div className={`flex h-[46px] shrink-0 items-center justify-between border-b px-4 ${separatorClass}`}>
                 <h2 className="text-[13px] font-semibold text-[#454048] dark:text-[#eee9ef]">{sidePanel === 'question' ? 'Question' : sidePanel === 'design' ? 'Design' : 'Ending'}</h2>
                 <div className="flex items-center gap-2">
@@ -415,21 +428,16 @@ export default function BuilderWorkspace({
                       <div className="space-y-3 px-3 pb-3">
                         <label className="block text-[11px] font-medium text-[#777179] dark:text-[#bcb6bc]">Question type</label>
                         <div className="flex items-center gap-2 rounded-lg bg-[#f6f4f6] px-2.5 py-2 text-[12px] capitalize text-[#48434a] dark:bg-[#302d31] dark:text-[#e3dee3]">{(() => { const Icon = QUESTION_TYPES.find(item => item.type === activeQuestion.type)?.icon ?? Type; return <Icon size={14} />; })()}{activeQuestion.type.replace('_', ' ')}</div>
+                        <label className="block text-[11px] font-medium text-[#777179] dark:text-[#bcb6bc]">Question text</label>
+                        <textarea aria-label="Question title" value={activeQuestion.title} onChange={event => onUpdateQuestion({ title: event.target.value })} rows={2} className="builder-textarea-no-scroll w-full rounded-lg border border-[#e4e0e5] bg-white px-2.5 py-2 text-[12px] outline-none focus:border-[#63aaa5] dark:border-[#4a454d] dark:bg-[#2d2a2f] dark:text-white" />
+                        <label className="block text-[11px] font-medium text-[#777179] dark:text-[#bcb6bc]">Description / help text</label>
+                        <textarea aria-label="Question description" value={activeQuestion.description || ''} onChange={event => onUpdateQuestion({ description: event.target.value })} rows={2} placeholder="Add extra context" className="builder-textarea-no-scroll w-full rounded-lg border border-[#e4e0e5] bg-white px-2.5 py-2 text-[12px] outline-none focus:border-[#63aaa5] dark:border-[#4a454d] dark:bg-[#2d2a2f] dark:text-white" />
                         <label className="flex items-center justify-between text-[12px] font-medium text-[#514c54] dark:text-[#e3dee3]">Required<Switch checked={activeQuestion.is_required} label="Required question" onChange={is_required => onUpdateQuestion({ is_required })} /></label>
                         {(activeQuestion.type === 'multiple_choice' || activeQuestion.type === 'dropdown') && <div className="space-y-2 border-t border-[#eeebee] pt-3 dark:border-[#403c42]">
                           <div className="flex items-center justify-between text-[11px] font-semibold text-[#777179] dark:text-[#bcb6bc]"><span>Answer options</span><span>{activeQuestion.settings?.choices?.length || 0}</span></div>
-                          {(activeQuestion.settings?.choices || []).map((choice, index) => <div key={`${index}-${choice}`} className="flex items-center gap-1.5"><span className="w-4 text-[10px] text-[#a39da5]">{String.fromCharCode(65 + index)}</span><input aria-label={`Answer option ${index + 1}`} value={choice} onChange={event => { const next = [...(activeQuestion.settings?.choices || [])]; next[index] = event.target.value; updateChoices(next); }} className="h-8 min-w-0 flex-1 rounded-lg border border-[#e4e0e5] bg-white px-2 text-[12px] outline-none focus:border-[#63aaa5] dark:border-[#4a454d] dark:bg-[#2d2a2f] dark:text-white" /><button type="button" onClick={() => updateChoices((activeQuestion.settings?.choices || []).filter((_, choiceIndex) => choiceIndex !== index))} aria-label={`Remove answer option ${index + 1}`} className="rounded p-1 text-[#aaa4ab] hover:text-red-500"><X size={14} /></button></div>)}
+                          {(activeQuestion.settings?.choices || []).map((choice, index) => <div key={`option-${index}`} className="flex items-center gap-1.5"><span className="w-4 text-[10px] text-[#a39da5]">{String.fromCharCode(65 + index)}</span><input aria-label={`Answer option ${index + 1}`} value={choice} onChange={event => { const next = [...(activeQuestion.settings?.choices || [])]; next[index] = event.target.value; updateChoices(next); }} className="h-8 min-w-0 flex-1 rounded-lg border border-[#e4e0e5] bg-white px-2 text-[12px] outline-none focus:border-[#63aaa5] dark:border-[#4a454d] dark:bg-[#2d2a2f] dark:text-white" /><button type="button" onClick={() => updateChoices((activeQuestion.settings?.choices || []).filter((_, choiceIndex) => choiceIndex !== index))} aria-label={`Remove answer option ${index + 1}`} className="rounded p-1 text-[#aaa4ab] hover:text-red-500"><X size={14} /></button></div>)}
                           <button type="button" onClick={() => updateChoices([...(activeQuestion.settings?.choices || []), `Option ${(activeQuestion.settings?.choices?.length || 0) + 1}`])} className="flex items-center gap-1 text-[11px] font-semibold text-[#007a87] hover:underline dark:text-[#8ad4cc]"><Plus size={13} />Add option</button>
                         </div>}
-                      </div>
-                    </details>
-                    <details open className="rounded-xl border border-[#e9e6e9] dark:border-[#403c42]">
-                      <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-3 text-[12px] font-semibold text-[#514c54] dark:text-[#e3dee3]"><span>Answer</span><ChevronDown size={14} /></summary>
-                      <div className="space-y-3 px-3 pb-3">
-                        <label className="block text-[11px] font-medium text-[#777179] dark:text-[#bcb6bc]">Question text</label>
-                        <textarea aria-label="Question title" value={activeQuestion.title} onChange={event => onUpdateQuestion({ title: event.target.value })} rows={2} className="w-full resize-y rounded-lg border border-[#e4e0e5] bg-white px-2.5 py-2 text-[12px] outline-none focus:border-[#63aaa5] dark:border-[#4a454d] dark:bg-[#2d2a2f] dark:text-white" />
-                        <label className="block text-[11px] font-medium text-[#777179] dark:text-[#bcb6bc]">Description / help text</label>
-                        <textarea aria-label="Question description" value={activeQuestion.description || ''} onChange={event => onUpdateQuestion({ description: event.target.value })} rows={2} placeholder="Add extra context" className="w-full resize-y rounded-lg border border-[#e4e0e5] bg-white px-2.5 py-2 text-[12px] outline-none focus:border-[#63aaa5] dark:border-[#4a454d] dark:bg-[#2d2a2f] dark:text-white" />
                       </div>
                     </details>
                     <details className="rounded-xl border border-[#e9e6e9] dark:border-[#403c42]">

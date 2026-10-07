@@ -69,10 +69,58 @@
 @layer base {
   * {
     @apply border-border;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(146, 138, 146, 0.7) transparent;
   }
+
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(146, 138, 146, 0.7);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(97, 89, 101, 0.8);
+  }
+
+  .dark * {
+    scrollbar-color: rgba(177, 165, 182, 0.65) transparent;
+  }
+
+  .dark *::-webkit-scrollbar-thumb {
+    background-color: rgba(177, 165, 182, 0.65);
+  }
+
+  .dark *::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(214, 207, 216, 0.8);
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-dm-sans), "DM Sans", Arial, sans-serif;
+  }
+}
+
+@layer components {
+  .builder-textarea-no-scroll {
+    overflow: hidden;
+    resize: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .builder-textarea-no-scroll::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -102,4 +150,49 @@
 
 .toast-slide-in {
   animation: toast-slide-in 0.2s ease-out;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(146, 138, 146, 0.7) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(146, 138, 146, 0.7);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(97, 89, 101, 0.8);
+  }
+
+  .dark * {
+    scrollbar-color: rgba(177, 165, 182, 0.65) transparent;
+  }
+
+  .dark *::-webkit-scrollbar-thumb {
+    background-color: rgba(177, 165, 182, 0.65);
+  }
+
+  .dark *::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(214, 207, 216, 0.8);
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-dm-sans), "DM Sans", Arial, sans-serif;
+  }
 }
