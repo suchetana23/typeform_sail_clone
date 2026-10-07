@@ -1,13 +1,11 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { getForm, getResponses } from '@/lib/api';
+import { API_URL, getForm, getResponses } from '@/lib/api';
 import { Form, Response, Question } from '@/types';
 import Link from 'next/link';
 import { ArrowLeft, Settings, ExternalLink, Download, Sun, Moon, X } from 'lucide-react';
 import { useAppTheme } from '@/context/ThemeContext';
-
-const API_URL = 'http://localhost:8000/api';
 
 type QuestionType = Question['type'];
 
