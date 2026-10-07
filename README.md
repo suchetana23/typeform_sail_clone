@@ -89,4 +89,4 @@ The frontend will be available at `http://localhost:3000`.
 ## Assumptions Made
 
 - Real authentication is mocked (assumes a default logged-in creator).
-- No complex branching or logic jumps were implemented in this version to keep the scope manageable, focusing on the core experience.
+- Workflows, comments and other features were not implemented in this version to keep the scope manageable, focusing on the core experience.
